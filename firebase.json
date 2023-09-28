@@ -28,7 +28,15 @@
     ],
     "rewrites": [
       {
-        "source": "**",
+        "source": "/api/register",
+        "function": "register"
+      },
+      {
+        "source": "/api/proxy",
+        "function": "proxy"
+      },
+      {
+        "source": "!/api/**",
         "destination": "/index.html"
       }
     ]

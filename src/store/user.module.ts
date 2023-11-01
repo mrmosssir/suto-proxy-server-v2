@@ -30,7 +30,7 @@ export const useUserStore = defineStore("user", () => {
     // actions
     const login = async (email: string, password: string) => {
         try {
-            const user = await signInWithEmailAndPassword(auth, email, sha256(password));
+            const user: any = await signInWithEmailAndPassword(auth, email, sha256(password));
             SET_TOKEN(user.idToken);
             SET_USER(user);
         } catch (error) {
@@ -55,7 +55,7 @@ export const useUserStore = defineStore("user", () => {
     const getters = { isLogin };
 
     const mutations = { SET_TOKEN };
-    
+
     const actions = { login, logout };
 
 

@@ -1,10 +1,9 @@
-// import { getAuth } from "firebase-admin/auth";
 import { https } from "firebase-functions";
+import { sha256 } from "js-sha256";
 
 import { ResponseBase, ProxyServiceResponse, UserTokenResponse } from "../models/Response";
 
 import { auth, store } from "../utils/store";
-// import { initializeApp } from "firebase-admin";
 
 type Req = https.Request;
 
@@ -12,7 +11,7 @@ type UserServiceHandler = (token?: string, params?: string, form?: userData) =>
     ResponseBase | Promise<ResponseBase> |
     ProxyServiceResponse | Promise<ProxyServiceResponse>;
 
-type UserRegisterHandler = (request: Req) =>
+type UserTokenHandler = (request: Req) =>
     ResponseBase | Promise<ResponseBase> |
     UserTokenResponse | Promise<UserTokenResponse>;
 
@@ -79,20 +78,20 @@ export const userIsExists: userIsExistsHandler = async (email: string) => {
     }
 };
 
-export const userRegister: UserRegisterHandler = async (request: Req) => {
-    const response = new UserTokenResponse(0, "Success");
-    const form = request.body.form;
-    if (!form) return userBadRequest("User data cannot empty.");
-    if (!form.email) return userBadRequest("Email cannot empty.");
-    if (!form.username) return userBadRequest("Username cannot empty.");
-    if (!form.password) return userBadRequest("Password cannot empty.");
+export const userRegister: UserTokenHandler = async (request: Req) => {
     try {
+        const response = new UserTokenResponse(0, "Success");
+        const form = request.body.form;
+        if (!form) return userBadRequest("User data cannot empty.");
+        if (!form.email) return userBadRequest("Email cannot empty.");
+        if (!form.username) return userBadRequest("Username cannot empty.");
+        if (!form.password) return userBadRequest("Password cannot empty.");
         const isExists = await userIsExists(form.email);
         if (isExists.get().code !== 0) return isExists;
         const record = await auth.createUser({
             email: form.email,
             emailVerified: false,
-            password: form.password,
+            password: sha256(form.password),
             displayName: form.username,
             disabled: true,
         });

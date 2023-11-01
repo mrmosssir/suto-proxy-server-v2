@@ -4,12 +4,16 @@ import { https, Response } from "firebase-functions";
 import { getService } from "../services/ProxyService";
 import { ResponseBase, ProxyServiceResponse } from "../models/Response";
 
+import { hasToken } from "../middleware/account";
+
 type Req = https.Request;
 type Res = Response<any>;
 type RequestHandler = (request: Req, response: Res) => void | Promise<void>;
 
 export const proxyController: RequestHandler = async (request: Req, response: Res) => {
     try {
+        const tokenStatus = await hasToken(request);
+        if (tokenStatus.get().code !== 0) response.send(tokenStatus);
         const method = request.method;
         switch (method) {
         case "GET": {

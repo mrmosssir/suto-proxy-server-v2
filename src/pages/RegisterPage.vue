@@ -1,7 +1,7 @@
 <template>
     <div class="register">
         <h2 class="register-title">Create a free account</h2>
-        <h3 class="register-description">Welcom to Sutoroxy.com</h3>
+        <h3 class="register-description">Welcome to Sutoroxy.com</h3>
         <ul class="register-form">
             <li class="register-form-item">
                 <label for="email">EMAIL</label>
@@ -24,39 +24,40 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from "vue";
-import axios from "axios";
 
-const form = reactive({ email: "", username: "", password: "" });
-const tips = reactive({ email: "", username: "", password: "" });
-const valid = reactive({ email: false, username: false, password: false });
-const canSubmit = computed(() => {
-    return valid.email && valid.username && valid.password;
-});
-const validEmail = () => {
-    const regex = /^\S+@\S+\.\S+$/;
-    if (!form.email) tips.email = "Please enter your email.";
-    else tips.email = regex.test(form.email) ? "" : "This email is not valid, please enter your email.";
-    valid.email = !tips.email;
-};
-const validUsername = () => {
-    if (!form.username) tips.username = "Please enter your username.";
-    else tips.username = "";
-    valid.username = !tips.username;
-};
-const validPassword = () => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!form.password) tips.password = "Please enter password.";
-    else tips.password = regex.test(form.password) ? "" : "Password must be at least eight characters and contain letters and numbers.";
-    valid.password = !tips.password;
-}
-const submit = async () => {
-    console.log(import.meta.env, canSubmit.value);
-    if (!canSubmit.value) return;
-    // submit api
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register`, { form });
-    console.log(response);
-}
+    import { computed, reactive } from "vue";
+    import axios from "axios";
+
+    const form = reactive({ email: "", username: "", password: "" });
+    const tips = reactive({ email: "", username: "", password: "" });
+    const valid = reactive({ email: false, username: false, password: false });
+    const canSubmit = computed(() => {
+        return valid.email && valid.username && valid.password;
+    });
+    const validEmail = () => {
+        const regex = /^\S+@\S+\.\S+$/;
+        if (!form.email) tips.email = "Please enter your email.";
+        else tips.email = regex.test(form.email) ? "" : "This email is not valid, please enter your email.";
+        valid.email = !tips.email;
+    };
+    const validUsername = () => {
+        if (!form.username) tips.username = "Please enter your username.";
+        else tips.username = "";
+        valid.username = !tips.username;
+    };
+    const validPassword = () => {
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        if (!form.password) tips.password = "Please enter password.";
+        else tips.password = regex.test(form.password) ? "" : "Password must be at least eight characters and contain letters and numbers.";
+        valid.password = !tips.password;
+    }
+    const submit = async () => {
+        console.log(import.meta.env, canSubmit.value);
+        if (!canSubmit.value) return;
+        // submit api
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register`, { form });
+        console.log(response);
+    }
 
 </script>
 

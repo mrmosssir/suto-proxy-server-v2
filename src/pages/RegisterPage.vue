@@ -20,13 +20,26 @@
             </li>
         </ul>
         <button class="register-submit" :disabled="!canSubmit" @click="submit">Register</button>
+        <p class="register-link">
+            Do you already have an account ? 
+            <router-link to="login">Sign in</router-link>
+        </p>
     </div>
 </template>
 
 <script setup lang="ts">
 
     import { computed, reactive } from "vue";
-    import axios from "axios";
+    import { storeToRefs } from "pinia";
+    import { useRouter } from "vue-router";
+
+    import { request } from "@/utils/request";
+    import { useUserStore } from "@/store";
+    
+    const router = useRouter();
+    const userStore = useUserStore();
+    const { register } = userStore;
+    const { isLogin } = storeToRefs(userStore);
 
     const form = reactive({ email: "", username: "", password: "" });
     const tips = reactive({ email: "", username: "", password: "" });
@@ -52,12 +65,17 @@
         valid.password = !tips.password;
     }
     const submit = async () => {
-        console.log(import.meta.env, canSubmit.value);
         if (!canSubmit.value) return;
-        // submit api
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register`, { form });
-        console.log(response);
-    }
+        const result = await register(form.email, form.password);
+        Object.keys(form).forEach(item => form[item as keyof typeof form] = "");
+        if (result) router.push("/login");
+    };
+
+    const init = () => {
+        if (isLogin.value) router.push("/");
+    };
+
+    init();
 
 </script>
 
@@ -82,7 +100,7 @@
             border-width: 0px;
             border-radius: 4px;
             background: $primary;
-            margin-top: 24px;
+            margin-bottom: 8px;
             cursor: pointer;
             &:disabled {
                 color: #999999;
@@ -90,10 +108,22 @@
                 cursor: not-allowed;
             }
         }
+        &-link {
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.6);
+            a, a:active {
+                color: #DA7274;
+            }
+        }
         &-form {
             margin-top: 24px;
             &-item {
                 margin-top: 16px;
+                &:last-child {
+                    margin-bottom: 16px;
+                }
             }
             label {
                 display: block;

@@ -16,6 +16,21 @@
 
 <script setup lang="ts">
 
+    import { useRouter } from "vue-router";
+    import { storeToRefs } from "pinia";
+    import { useUserStore } from "@/store";
+
+    const router = useRouter();
+
+    const userStore = useUserStore();
+    const { isLogin } = storeToRefs(userStore);
+
+    const init = () => {
+        if (!isLogin.value) router.push("/login");
+    };
+
+    init();
+
 </script>
 
 <style lang="scss" scoped>

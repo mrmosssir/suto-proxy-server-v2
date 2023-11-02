@@ -1,35 +1,39 @@
 <template>
-    <div class="register">
-        <h2 class="register-title">Sign in</h2>
-        <h3 class="register-description">Welcome to Sutoroxy.com</h3>
-        <ul class="register-form">
-            <li class="register-form-item">
+    <div class="login">
+        <h2 class="login-title">Sign in</h2>
+        <h3 class="login-description">Welcome to Sutoroxy.com</h3>
+        <ul class="login-form">
+            <li class="login-form-item">
                 <label for="email">EMAIL</label>
                 <input type="text" id="email" v-model="form.email" @input="validEmail" @keypress.enter="submit" />
-                <span class="register-tips" v-if="tips.email">{{ tips.email }}</span>
+                <span class="login-tips" v-if="tips.email">{{ tips.email }}</span>
             </li>
-            <li class="register-form-item">
+            <li class="login-form-item">
                 <label for="password">PASSWORD</label>
                 <input type="password" id="password" v-model="form.password" @input="validPassword" @keypress.enter="submit" />
-                <span class="register-tips" v-if="tips.password">{{ tips.password }}</span>
+                <span class="login-tips" v-if="tips.password">{{ tips.password }}</span>
             </li>
         </ul>
-        {{ isLogin }}
-        <button class="register-submit" :disabled="!canSubmit" @click="submit">Sign in</button>
-        <button @click="logout">logout</button>
+        <button class="login-submit" :disabled="!canSubmit" @click="submit">Sign In</button>
+        <div class="flex">
+            <p class="login-link">
+                <router-link to="/">Forget Password ?</router-link>
+            </p>
+            <p class="login-link">
+                Not on Sutoroxy yet ? 
+                <router-link to="/register">Sign Up</router-link>
+            </p>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 
-    import { computed, inject, reactive } from "vue";
+    import { computed, reactive } from "vue";
     import { useRouter } from "vue-router";
     import { storeToRefs } from "pinia";
-    import { signInWithEmailAndPassword } from "firebase/auth";
 
     import { useUserStore } from "@/store";
-
-    const auth: any = inject("$auth");
 
     const form = reactive({ email: "", password: "" });
     const tips = reactive({ email: "", password: "" });
@@ -37,7 +41,7 @@
 
     const userStore = useUserStore();
     const { isLogin } = storeToRefs(userStore);
-    const { login, logout } = userStore;
+    const { login } = userStore;
 
     const router = useRouter();
 
@@ -55,24 +59,30 @@
         if (!form.password) tips.password = "Please enter password.";
         else tips.password = regex.test(form.password) ? "" : "Password must be at least eight characters and contain letters and numbers.";
         valid.password = !tips.password;
-    }
+    };
 
     const submit = async () => {
         if (!canSubmit.value) return;
-        login(form.email, form.password);
-    }
+        await login(form.email, form.password);
+        if (isLogin.value) router.push("/");
+    };
 
     const init = () => {
-        if (isLogin) router.push("/");
-    }
+        if (isLogin.value) router.push("/");
+    };
 
-    // init();
+    init();
 
 </script>
 
 <style lang="scss" scoped>
 
-    .register {
+    .login {
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
         &-title {
             font-size: 20px;
             font-weight: 500;
@@ -92,7 +102,7 @@
             border-width: 0px;
             border-radius: 4px;
             background: $primary;
-            margin-top: 24px;
+            margin-bottom: 8px;
             cursor: pointer;
             &:disabled {
                 color: #999999;
@@ -100,10 +110,22 @@
                 cursor: not-allowed;
             }
         }
+        &-link {
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.6);
+            a, a:active {
+                color: #DA7274;
+            }
+        }
         &-form {
             margin-top: 24px;
             &-item {
                 margin-top: 16px;
+                &:last-child {
+                    margin-bottom: 16px;
+                }
             }
             label {
                 display: block;

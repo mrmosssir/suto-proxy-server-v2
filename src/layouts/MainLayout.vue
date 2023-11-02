@@ -9,9 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import { RouterView } from "vue-router";
-import HomeMenu from "@/components/HomeMenu.vue";
-import SideBar from "@/components/SideBar.vue";
+    import { RouterView } from "vue-router";
+    import HomeMenu from "@/components/HomeMenu.vue";
+    import SideBar from "@/components/SideBar.vue";
 </script>
 
 <style lang="scss">

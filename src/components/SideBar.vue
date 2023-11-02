@@ -7,11 +7,27 @@
         <RouterLink to="/about">
             <span class="side-bar-profile">SUT</span>
         </RouterLink>
+        <hr>
+        <button class="side-bar-logout" @click="onLogout">
+            <icon icon="fa-solid fa-arrow-right-from-bracket"></icon>
+        </button>
     </nav>
 </template>
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+
+    import { useRouter, RouterLink } from "vue-router";
+    import { useUserStore } from "@/store";
+
+    const router = useRouter();
+
+    const userStore = useUserStore();
+    const { logout } = userStore;
+
+    const onLogout = async () => {
+        await logout();
+        router.push("/login");
+    }
 
 </script>
 
@@ -31,10 +47,11 @@ import { RouterLink, RouterView } from "vue-router";
             border: 1px solid #C1BDC9;
             margin: 24px auto;
         }
-        &-profile {
+        &-profile, &-logout {
             display: block;
             width: 48px;
             height: 48px;
+            border: none;
             border-radius: 50%;
             background: $primary;
             color: #FFFFFF;
@@ -42,6 +59,7 @@ import { RouterLink, RouterView } from "vue-router";
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
         }
     }
 </style>

@@ -5,19 +5,32 @@
 </template>
 
 <script setup lang="ts">
-    import { inject, onMounted, watchEffect } from "vue";
-    import { RouterView } from "vue-router"
+    import { inject } from "vue";
+    import { useRouter, RouterView } from "vue-router"
     import { useUserStore } from "@/store";
     import { onAuthStateChanged } from "firebase/auth";
 
-    const { SET_TOKEN } = useUserStore();
+    const router = useRouter();
+
+    const { SET_TOKEN, logout } = useUserStore();
 
     const auth: any = inject("$auth");
+
     onAuthStateChanged(auth, (user: any) => {
-        console.log(user);
         if (!user) return;
-        SET_TOKEN(user.accessToken);
-    })
+        if (!user.emailVerified) {
+            alert("Please verify your email address to continue.");
+            router.push("/login");
+            logout();
+        }
+    });
+
+    const init = () => {
+        const token = localStorage.getItem("token");
+        if (!!token) SET_TOKEN(token);
+    }
+
+    init();
 
 </script>
 

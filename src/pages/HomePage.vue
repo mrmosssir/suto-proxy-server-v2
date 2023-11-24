@@ -10,6 +10,10 @@
                 Sutoroxy simplifies API integration with its robust proxy solution. Enhance security, performance, and reliability effortlessly. Explore Sutoroxy API proxies for your project's success.
             </p>
             <p class="start">How does Sutoroxy.com works? Get started.</p>
+
+            <QuotaOverview />
+
+            <hr>
         </div>
     </div>
 </template>
@@ -19,6 +23,8 @@
     import { useRouter } from "vue-router";
     import { storeToRefs } from "pinia";
     import { useUserStore } from "@/store";
+
+    import QuotaOverview from "@/components/QuotaOverview.vue";
 
     const router = useRouter();
 
@@ -64,6 +70,10 @@
     .start {
         color: $primary;
         margin-top: 12px;
+    }
+    hr {
+        border-width: thin 0 0;
+        border-color: rgba(0, 0, 0, 0.12);
     }
 }
 </style>

@@ -1,21 +1,19 @@
-import { https } from "firebase-functions";
-import { sha256 } from "js-sha256";
-
-import { ResponseBase, ProxyServiceResponse, UserTokenResponse } from "../models/Response";
+// import { response } from "express";
+import { ResponseBase, ProxyServiceResponse, PlanResponse } from "../models/Response";
 
 import { auth, store } from "../utils/store";
-
-type Req = https.Request;
 
 type UserServiceHandler = (token?: string, params?: string, form?: userData) =>
     ResponseBase | Promise<ResponseBase> |
     ProxyServiceResponse | Promise<ProxyServiceResponse>;
 
-type UserTokenHandler = (request: Req) =>
-    ResponseBase | Promise<ResponseBase> |
-    UserTokenResponse | Promise<UserTokenResponse>;
+type UserIsExistsHandler = (email: string) => ResponseBase | Promise<ResponseBase>;
 
-type userIsExistsHandler = (email: string) => ResponseBase | Promise<ResponseBase>;
+type UserInitDataHandler = (uid: string) => ResponseBase | Promise<ResponseBase>;
+
+type UserPlanQuatoHandler = (uid: string) =>
+    ResponseBase | Promise<ResponseBase> |
+    PlanResponse | Promise<PlanResponse>;
 
 export type userData = {
     email: string,
@@ -41,6 +39,12 @@ export const userBadRequest: UserServiceHandler = (methodMessage?: string) => {
     return response;
 };
 
+export const planNotFound: UserServiceHandler = () => {
+    const message = "The provided plan does not correspond to a valid plan, please contact customer service.";
+    const response = new ResponseBase(404, message);
+    return response;
+};
+
 export const userRouteIsExists: UserServiceHandler = async (token?: string, params?: string) => {
     const response = new ProxyServiceResponse(0, "Success");
 
@@ -62,7 +66,7 @@ export const userRouteIsExists: UserServiceHandler = async (token?: string, para
     return response;
 };
 
-export const userIsExists: userIsExistsHandler = async (email: string) => {
+export const userIsExists: UserIsExistsHandler = async (email: string) => {
     const response = new ResponseBase(0, "Success");
     try {
         const record = await auth.getUsers([{ email }]);
@@ -78,26 +82,38 @@ export const userIsExists: userIsExistsHandler = async (email: string) => {
     }
 };
 
-export const userRegister: UserTokenHandler = async (request: Req) => {
+export const userInitData: UserInitDataHandler = async (uid: string) => {
     try {
-        const response = new UserTokenResponse(0, "Success");
-        const form = request.body.form;
-        if (!form) return userBadRequest("User data cannot empty.");
-        if (!form.email) return userBadRequest("Email cannot empty.");
-        if (!form.username) return userBadRequest("Username cannot empty.");
-        if (!form.password) return userBadRequest("Password cannot empty.");
-        const isExists = await userIsExists(form.email);
-        if (isExists.get().code !== 0) return isExists;
-        const record = await auth.createUser({
-            email: form.email,
-            emailVerified: false,
-            password: sha256(form.password),
-            displayName: form.username,
-            disabled: true,
-        });
-        const token = await auth.createCustomToken(record.providerData[0].uid);
-        response.data = { token };
-        response.setMessage("Register success.");
+        const response = new ResponseBase(0, "Success");
+        if (!uid) return permissionDenied();
+        store.collection("user").doc(uid).set({ plan: "free" });
+        return response;
+    } catch (error) {
+        const errroResponse = new ResponseBase(500, "");
+        const message: string = error instanceof Error ? error.message : "Unknown error";
+        errroResponse.setMessage(message);
+        return errroResponse;
+    }
+};
+
+export const userPlanQuato: UserPlanQuatoHandler = async (uid: string) => {
+    try {
+        const response = new PlanResponse(0, "Success");
+        if (!uid) return permissionDenied();
+
+        const userDoc = store.collection("user").doc(uid);
+        const userDocData = await userDoc.get();
+        if (!userDocData.exists) return permissionDenied();
+
+        const userData = userDocData.data();
+        if (!userData) return permissionDenied();
+
+        const planDoc = store.collection("plans").doc(userData.plan);
+        const planDocData = await planDoc.get();
+        if (!planDocData.exists) return planNotFound();
+
+        const planData = planDocData.data();
+        response.data = planData;
         return response;
     } catch (error) {
         const errroResponse = new ResponseBase(500, "");

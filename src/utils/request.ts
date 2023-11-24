@@ -2,7 +2,8 @@ import axios from "axios";
 
 export const request = async (config: any) => {
     const response: any = await axios(config);
-    const code = response?.code ?? 0;
+    const data = response?.data;
+    const code = data?.code ?? 0;
     switch (code) {
         case 401:
             localStorage.removeItem("token");
@@ -11,5 +12,5 @@ export const request = async (config: any) => {
         default:
             break;
     }
-    return response;
+    return data;
 };

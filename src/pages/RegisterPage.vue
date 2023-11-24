@@ -66,7 +66,7 @@
     }
     const submit = async () => {
         if (!canSubmit.value) return;
-        const result = await register(form.email, form.password);
+        const result = await register(form.email, form.password, form.username);
         Object.keys(form).forEach(item => form[item as keyof typeof form] = "");
         if (result) router.push("/login");
     };

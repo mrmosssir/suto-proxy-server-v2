@@ -28,12 +28,12 @@
     ],
     "rewrites": [
       {
-        "source": "/api/register",
-        "function": "register"
+        "source": "/api/init",
+        "function": "init"
       },
       {
-        "source": "/api/proxy",
-        "function": "proxy"
+        "source": "/api/plan/**",
+        "function": "plan"
       },
       {
         "source": "!/api/**",

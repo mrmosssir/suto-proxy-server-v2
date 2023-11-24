@@ -4,15 +4,17 @@ import {
     sendEmailVerification,
     signInWithEmailAndPassword,
     signOut,
-    createUserWithEmailAndPassword
+    createUserWithEmailAndPassword,
+    updateProfile
 } from "firebase/auth";
 import { sha256 } from "js-sha256";
 
 export const useUserStore = defineStore("user", () => {
 
     type User = {
-        name: string,
+        displayName: string,
         email: string,
+        uid: string
     }
 
     const auth: any = inject("$auth");
@@ -20,7 +22,7 @@ export const useUserStore = defineStore("user", () => {
     // state
     const token = ref<string>("");
     const isLogin = ref<boolean>(false);
-    const user = reactive<User>({ name: "", email: "" });
+    const user = reactive<User>({ displayName: "", email: "", uid: "" });
 
     // mutations
     const SET_TOKEN = (val: string) => {
@@ -30,8 +32,10 @@ export const useUserStore = defineStore("user", () => {
     };
 
     const SET_USER = (data: User) => {
-        user.name = data.name;
+        user.displayName = data.displayName;
         user.email = data.email;
+        user.uid = data.uid;
+        localStorage.setItem("user", JSON.stringify(data));
     };
 
     // actions
@@ -55,6 +59,7 @@ export const useUserStore = defineStore("user", () => {
         try {
             await signOut(auth);
             SET_TOKEN("");
+            SET_USER({ displayName: "", email: "", uid: "" });
             isLogin.value = false;
             return;
         } catch (error) {
@@ -63,14 +68,16 @@ export const useUserStore = defineStore("user", () => {
         }
     };
 
-    const register = async (email: string, password: string) => {
+    const register = async (email: string, password: string, username: string) => {
         try {
             const response: any = await createUserWithEmailAndPassword(auth, email, sha256(password));
             const user = response.user;
+            await updateProfile(user, { displayName: username });
             await sendEmailVerification(user);
             alert(`Verification email has been sent, please go to ${user.email} for authentication.`);
             return true;
         } catch (error: any) {
+            console.log(error);
             if (error.code === "auth/email-already-in-use") {
                 alert("Email alreay exists.");
             }
@@ -84,7 +91,7 @@ export const useUserStore = defineStore("user", () => {
 
     const getters = {};
 
-    const mutations = { SET_TOKEN };
+    const mutations = { SET_TOKEN, SET_USER };
 
     const actions = { login, logout, register };
 

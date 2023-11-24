@@ -3,10 +3,12 @@ import { onRequest } from "firebase-functions/v2/https";
 import { setGlobalOptions } from "firebase-functions/v2/options";
 
 import { proxyController } from "./controllers/ProxyController";
-import { registerController } from "./controllers/UserController";
+import { initController, planQuatoController } from "./controllers/UserController";
 
 setGlobalOptions({ maxInstances: 10 });
 
 export const proxy = onRequest(proxyController);
 
-export const register = onRequest(registerController);
+export const init = onRequest(initController);
+
+export const plan = onRequest(planQuatoController);

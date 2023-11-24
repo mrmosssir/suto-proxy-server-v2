@@ -5,7 +5,7 @@
         </RouterLink>
         <hr>
         <RouterLink to="/about">
-            <span class="side-bar-profile">SUT</span>
+            <span class="side-bar-profile">{{ name }}</span>
         </RouterLink>
         <hr>
         <button class="side-bar-logout" @click="onLogout">
@@ -16,18 +16,30 @@
 
 <script setup lang="ts">
 
-    import { useRouter, RouterLink } from "vue-router";
-    import { useUserStore } from "@/store";
+import { computed } from "vue";
+import { useRouter, RouterLink } from "vue-router";
+import { storeToRefs } from "pinia";
 
-    const router = useRouter();
+import { useUserStore } from "@/store";
 
-    const userStore = useUserStore();
-    const { logout } = userStore;
+const router = useRouter();
 
-    const onLogout = async () => {
-        await logout();
-        router.push("/login");
-    }
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+const { logout } = userStore;
+
+const name = computed(() => {
+    const arr = user.value.displayName.split(" ");
+    const cutArr = arr.map(item => {
+        return `${item[0]}${item[1]}`;
+    });
+    return cutArr.join(" ");
+});
+
+const onLogout = async () => {
+    await logout();
+    router.push("/login");
+}
 
 </script>
 

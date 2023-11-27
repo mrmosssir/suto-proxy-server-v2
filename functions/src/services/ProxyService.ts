@@ -1,13 +1,32 @@
 import axios from "axios";
 import { https } from "firebase-functions";
 
-import { ResponseBase, ProxyServiceResponse } from "../models/Response";
+import { ResponseBase, ProxyListResponse, ProxyServiceResponse } from "../models/Response";
+import { store } from "../utils/store";
 
-import { userRouteIsExists } from "./UserService";
+import { userRouteIsExists, permissionDenied } from "./UserService";
 
 type Req = https.Request;
 
+type ProxyListHandler = (uid: string) => ResponseBase | ProxyListResponse | Promise<ResponseBase> | Promise<ProxyListResponse>;
+
 type ProxyServiceHandler = (request: Req) => ResponseBase | ProxyServiceResponse | Promise<ResponseBase> | Promise<ProxyServiceResponse>;
+
+export const getProxyListService: ProxyListHandler = async (uid: string) => {
+    const response = new ProxyListResponse(0, "Success");
+    if (!uid) return permissionDenied();
+
+    const userProxySnapshot = await store.collection("user-proxy").doc(uid).get();
+    if (!userProxySnapshot.exists) {
+        response.data = [];
+        return response;
+    }
+    const userProxyData = await userProxySnapshot.data();
+    const list = userProxyData ? userProxyData.list : [];
+    response.data = list;
+
+    return response;
+}
 
 export const getService: ProxyServiceHandler = async (request: Req) => {
     try {

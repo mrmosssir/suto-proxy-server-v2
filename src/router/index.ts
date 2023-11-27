@@ -7,6 +7,7 @@ import HomePage from "@/pages/HomePage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import RegisterPage from "@/pages/RegisterPage.vue";
 import VerifyPage from "@/pages/VerifyPage.vue";
+import ProxyPage from "@/pages/ProxyPage.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,10 @@ const router = createRouter({
                 {
                     path: "/",
                     component: HomePage
+                },
+                {
+                    path: "/proxy",
+                    component: ProxyPage
                 }
             ],
         },

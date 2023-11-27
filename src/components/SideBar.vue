@@ -4,7 +4,7 @@
             <img class="side-bar-logo" src="../assets/logo.svg" alt="">
         </RouterLink>
         <hr>
-        <RouterLink to="/about">
+        <RouterLink to="/proxy">
             <span class="side-bar-profile">{{ name }}</span>
         </RouterLink>
         <hr>

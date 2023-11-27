@@ -2,11 +2,11 @@
     <div class="quota-overview">
         <ul class="quota-overview-list">
             <li class="quota-overview-item" v-for="item in quotaKeyList">
-                <strong class="quota-overview-title">{{ nameMapping[item as keyof QuotaMap].name }}</strong>
+                <strong class="quota-overview-title">{{ nameMapping[item as keyof QuotaMap]?.name }}</strong>
                 <p class="quota-overview-content">
                     {{ quota[item as keyof Quota] }}
-                    <template v-if="nameMapping[item as keyof QuotaMap].unit">
-                        <span class="quota-overview-unit">{{ `/${nameMapping[item as keyof QuotaMap].unit}` }}</span>
+                    <template v-if="nameMapping[item as keyof QuotaMap]?.unit">
+                        <span class="quota-overview-unit">{{ `/${nameMapping[item as keyof QuotaMap]?.unit}` }}</span>
                         <icon class="icon" icon="fa-solid fa-circle-info"></icon>
                     </template>
                 </p>
@@ -16,49 +16,29 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from "vue";
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
-import { request } from "@/utils/request";
 
-import { useUserStore } from "@/store";
+import { useUserStore, usePlanStore } from "@/store";
 
-interface Quota { proxyDomain: number, requests: number };
+import { type Quota, type QuotaMap } from "@/types/Quota";
 
-type QuotaMap = {
-    proxyDomain: QuotaMapItem,
-    requests: QuotaMapItem
-};
+const { getQuota } = usePlanStore();
 
-type QuotaMapItem = { name: string, unit?: string };
-
-const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
+const { user } = storeToRefs(useUserStore());
+const { quota } = storeToRefs(usePlanStore());
 
 const nameMapping: QuotaMap = {
     requests: { name: "REQUESTS", unit: "day" },
-    proxyDomain: { name: "PROXY SOURCES" },
+    proxys: { name: "PROXY SOURCES" },
 }
-
-const quota: Quota = reactive({
-    requests: 0,
-    proxyDomain: 0,
-});
 
 const quotaKeyList = computed(() => {
-    return Object.keys(quota);
+    // level column not display
+    return Object.keys(quota.value).filter(item => item !== "level");
 });
 
-const getQuota = async (uid: string) => {
-    try {
-        const { data } = await request({ method: "get", url: `${import.meta.env.VITE_API_BASE_URL}/plan/${uid}` });
-        quota.proxyDomain = data?.proxy_domain ?? 0;
-        quota.requests = data?.request_per_day ?? 0;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-getQuota(user.value.uid);
+if (!quota.value.level) getQuota(user.value.uid);
 
 </script>
 

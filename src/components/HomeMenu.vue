@@ -1,17 +1,15 @@
 <template>
     <div class="home-menu">
         <h2 class="home-menu-title">Sutoroxy.com</h2>
-        <div class="container">
-            <ul class="home-menu-list">
-                <li class="home-menu-item">
-                    <icon class="icon" icon="fa-solid fa-house-chimney"></icon>
-                    <div class="home-menu-content">Home</div>
-                </li>
-                <li class="home-menu-item">
-                    <icon class="icon" icon="fa-solid fa-server"></icon>
-                    <div class="home-menu-content">Proxys</div>
-                </li>
-            </ul>
+        <div class="home-menu-list">
+            <router-link class="home-menu-item" to="/">
+                <icon class="icon" icon="fa-solid fa-house-chimney"></icon>
+                <span class="home-menu-content">Home</span>
+            </router-link>
+            <router-link class="home-menu-item" to="/proxy">
+                <icon class="icon" icon="fa-solid fa-server"></icon>
+                <span class="home-menu-content">Proxys</span>
+            </router-link>
         </div>
     </div>   
 </template>
@@ -20,7 +18,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .home-menu{
+    .home-menu {
         width: 268px;
         height: 100vh;
         &-title {
@@ -30,7 +28,7 @@
             font-weight: 500;
             margin: 24px 0 24px 16px;
         }
-        .container {
+        &-list {
             padding: 8px;
         }
         &-item {

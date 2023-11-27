@@ -11,6 +11,14 @@ export class ResponseBase {
     }
 }
 
+export class ProxyListResponse extends ResponseBase {
+    data: any;
+    constructor (code: number, message: string, data?: any) {
+        super(code, message);
+        this.data = data;
+    }
+}
+
 export class ProxyServiceResponse extends ResponseBase {
     data: any;
     constructor (code: number, message: string, data?: any) {

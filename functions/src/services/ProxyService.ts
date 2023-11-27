@@ -26,7 +26,7 @@ export const getProxyListService: ProxyListHandler = async (uid: string) => {
     response.data = list;
 
     return response;
-}
+};
 
 export const getService: ProxyServiceHandler = async (request: Req) => {
     try {

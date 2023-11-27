@@ -9,7 +9,7 @@ setGlobalOptions({ maxInstances: 10 });
 
 export const proxy = {
     // onRequest(proxyController)
-    list: onRequest(proxyListController)
+    list: onRequest(proxyListController),
 };
 
 export const init = onRequest(initController);

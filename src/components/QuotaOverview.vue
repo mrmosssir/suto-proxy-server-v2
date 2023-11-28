@@ -16,7 +16,7 @@
                 <Progress :percent="50"></Progress>
                 <div class="quota-overview-bottom">
                     <div class="quota-overview-rate">
-                        0 / {{ quota[item as keyof Quota] }} {{ nameMapping[item as keyof QuotaMap]?.unit ?? "" }}
+                        0 / {{ quota[item as keyof Quota] }}
                     </div>
                     <div class="quota-overview-remain">
                         0 Remaing
@@ -66,8 +66,7 @@ if (!quota.value.level) getQuota(user.value.uid);
         flex-wrap: wrap;
     }
     &-item {
-        width: 30%;
-        min-width: 16.25rem;
+        width: 16.25rem;
         background: var(--card-sec-bkg);
         box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
         border-radius: 1.25rem;
@@ -105,7 +104,6 @@ if (!quota.value.level) getQuota(user.value.uid);
     &-rate {
         font-size: 0.9rem;
         color: var(--card-third-dark-text);
-        margin-top: 0.25rem;
     }
     &-remain {
         background: var(--btn-bkg-sec);

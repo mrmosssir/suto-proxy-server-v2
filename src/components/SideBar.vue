@@ -1,16 +1,20 @@
 <template>
-    <nav class="side-bar">
-        <RouterLink to="/">
-            <img class="side-bar-logo" src="../assets/logo.svg" alt="">
-        </RouterLink>
-        <hr>
-        <RouterLink to="/proxy">
-            <span class="side-bar-profile">{{ name }}</span>
-        </RouterLink>
-        <hr>
-        <button class="side-bar-logout" @click="onLogout">
-            <icon icon="fa-solid fa-arrow-right-from-bracket"></icon>
-        </button>
+    <nav class="sidebar">
+        <div class="sidebar-item top">
+            <RouterLink to="/">
+                <img class="sidebar-logo" src="../assets/logo.svg" alt="">
+            </RouterLink>
+        </div>
+        <div class="sidebar-item">
+            <RouterLink to="/proxy">
+                <span class="sidebar-name">{{ name }}</span>
+            </RouterLink>
+        </div>
+        <div class="sidebar-item bottom">
+            <button class="sidebar-icon" @click="onLogout">
+                <icon icon="fa-solid fa-arrow-right-from-bracket"></icon>
+            </button>
+        </div>
     </nav>
 </template>
 
@@ -42,36 +46,3 @@ const onLogout = async () => {
 }
 
 </script>
-
-<style scoped lang="scss">
-    .side-bar {
-        width: 72px;
-        height: 100vh;
-        background: $gray;
-        text-align: center;
-        padding: 12px;
-        &-logo {
-            display: block;
-            width: 46px;
-        }
-        hr {
-            width: 32px;
-            border: 1px solid #C1BDC9;
-            margin: 24px auto;
-        }
-        &-profile, &-logout {
-            display: block;
-            width: 48px;
-            height: 48px;
-            border: none;
-            border-radius: 50%;
-            background: $primary;
-            color: #FFFFFF;
-            font-size: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-    }
-</style>

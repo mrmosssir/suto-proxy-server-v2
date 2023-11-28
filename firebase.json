@@ -36,6 +36,10 @@
         "function": "plan"
       },
       {
+        "source": "/api/proxy-list/**",
+        "function": "proxy-list"
+      },
+      {
         "source": "!/api/**",
         "destination": "/index.html"
       }

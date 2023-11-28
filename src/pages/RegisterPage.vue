@@ -99,7 +99,7 @@
             font-size: 16px;
             border-width: 0px;
             border-radius: 4px;
-            background: $primary;
+            background: #DA7274;
             margin-bottom: 8px;
             cursor: pointer;
             &:disabled {

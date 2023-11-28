@@ -1,0 +1,46 @@
+.sidebar {
+    height: 96vh;
+    background: var(--card-main-bkg);
+    border-radius: 1.5rem;
+    position: relative;
+    padding: 1.25rem 1.5rem;
+    margin: 2vh 1.25rem;
+    &-item {
+        width: 2.5rem;
+        padding: 1rem 0;
+        text-align: center;
+        &.top {
+            padding-top: 0;
+            border-bottom: 0.01rem solid var(--card-third-light-text);
+        }
+        &.bottom {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top: 0.01rem solid var(--card-third-light-text);
+        }
+    }
+    &-logo {
+        width: 2rem;
+    }
+    &-name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.25rem;
+        color: var(--card-sec-icon-text);
+        border-radius: 0.5rem;
+        background: var(--card-sec-icon-bkg);
+    }
+    &-icon {
+        width: 2rem;
+        font-size: 1.25rem;
+        background: transparent;
+        color: var(--card-main-text);
+        border: none;
+        cursor: pointer;
+    }
+}

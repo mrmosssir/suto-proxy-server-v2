@@ -1,20 +1,14 @@
 <template>
-    <div class="home-page">
-        <div class="container">
-            <h1 class="title">
-                <p>WELCOME TO</p>
-                <span class="red">Sutoroxy</span>
-                <span>.com</span>
-            </h1>
-            <p class="description">
-                Sutoroxy simplifies API integration with its robust proxy solution. Enhance security, performance, and reliability effortlessly. Explore Sutoroxy API proxies for your project's success.
-            </p>
-            <p class="start">How does Sutoroxy.com works? Get started.</p>
-
-            <QuotaOverview />
-
-            <hr>
-        </div>
+    <div class="wrap">
+        <h1 class="title">
+            <p>Welcome</p>
+            <strong>Dashboard</strong>
+        </h1>
+        <!-- <p class="description">
+            Sutoroxy simplifies API integration with its robust proxy solution. Enhance security, performance, and reliability effortlessly. Explore Sutoroxy API proxies for your project's success.
+        </p>
+        <p class="start">How does Sutoroxy.com works? Get started.</p> -->
+        <QuotaOverview />
     </div>
 </template>
 
@@ -40,25 +34,17 @@
 </script>
 
 <style lang="scss" scoped>
-.home-page {
-    flex: 1;
-    .container  {
-        width: 960px;
-        margin: 0 auto;
-        padding: 48px;
-    }
+.wrap {
     .title {
-        font-size: 14px;
-        color: #666666;
+        font-size: 0.75rem;
+        color: var(--sec-text);
         p {
-            letter-spacing: 2px;
+            letter-spacing: 0.1rem;
         }
-        span {
-            font-size: 48px;
-            color: #333333;
-            &.red {
-                color: $primary;
-            }   
+        strong {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--main-text);
         }
     }
     .description {
@@ -68,7 +54,7 @@
         margin-top: 12px;
     }
     .start {
-        color: $primary;
+        color: #DA7274;
         margin-top: 12px;
     }
     hr {

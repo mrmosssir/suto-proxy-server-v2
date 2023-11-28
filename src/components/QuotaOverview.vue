@@ -2,14 +2,26 @@
     <div class="quota-overview">
         <ul class="quota-overview-list">
             <li class="quota-overview-item" v-for="item in quotaKeyList">
+                <div class="quota-overview-icon">
+                    <icon :icon="`fa-solid ${nameMapping[item as keyof QuotaMap]?.icon}`"></icon>
+                </div>
                 <strong class="quota-overview-title">{{ nameMapping[item as keyof QuotaMap]?.name }}</strong>
                 <p class="quota-overview-content">
                     {{ quota[item as keyof Quota] }}
-                    <template v-if="nameMapping[item as keyof QuotaMap]?.unit">
-                        <span class="quota-overview-unit">{{ `/${nameMapping[item as keyof QuotaMap]?.unit}` }}</span>
-                        <icon class="icon" icon="fa-solid fa-circle-info"></icon>
-                    </template>
+                    <span class="quota-overview-unit" v-if="nameMapping[item as keyof QuotaMap]?.unit">
+                        {{ nameMapping[item as keyof QuotaMap]?.unit }}
+                    </span>
+                    / {{ nameMapping[item as keyof QuotaMap]?.cycle }}
                 </p>
+                <Progress :percent="50"></Progress>
+                <div class="quota-overview-bottom">
+                    <div class="quota-overview-rate">
+                        0 / {{ quota[item as keyof Quota] }} {{ nameMapping[item as keyof QuotaMap]?.unit ?? "" }}
+                    </div>
+                    <div class="quota-overview-remain">
+                        0 Remaing
+                    </div>
+                </div>
             </li>
         </ul>
     </div>
@@ -18,6 +30,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
+
+import Progress from "@/components/Progress.vue";
 
 import { useUserStore, usePlanStore } from "@/store";
 
@@ -29,8 +43,8 @@ const { user } = storeToRefs(useUserStore());
 const { quota } = storeToRefs(usePlanStore());
 
 const nameMapping: QuotaMap = {
-    requests: { name: "REQUESTS", unit: "day" },
-    proxys: { name: "PROXY SOURCES" },
+    requests: { name: "Requrets", unit: "record", cycle: "day", icon: "fa-share-from-square" },
+    proxys: { name: "Proxy Sources", cycle: "total", icon: "fa-server" },
 }
 
 const quotaKeyList = computed(() => {
@@ -44,30 +58,62 @@ if (!quota.value.level) getQuota(user.value.uid);
 
 <style lang="scss" scoped>
 .quota-overview {
-    margin: 64px 0 48px 0;
+    margin: 4rem 0 2rem 0;
     &-list {
         width: 100%;
         display: flex;
+        gap: 3rem;
+        flex-wrap: wrap;
     }
     &-item {
-        width: 25%;
+        width: 30%;
+        min-width: 16.25rem;
+        background: var(--card-sec-bkg);
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+        border-radius: 1.25rem;
+        text-align: center;
+        position: relative;
+        padding: 3rem 1.5rem 1.5rem 1.5rem;
+    }
+    &-icon {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 1.25rem;
+        font-size: 1.25rem;
+        color: var(--card-main-text);
+        background: var(--card-main-bkg);
+        border-radius: 1.25rem;
     }
     &-title {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.8);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--card-sec-text)
     }
     &-content {
-        display: flex;
-        align-items: flex-end;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.8);
-        margin-top: 14px;
+        font-size: 0.9rem;
+        color: var(--card-third-dark-text);
+        margin-top: 0.25rem;
     }
-    &-unit {
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.6);
-        margin-left: 6px;
-        margin-right: 6px;
+    &-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.25rem;
+    }
+    &-rate {
+        font-size: 0.9rem;
+        color: var(--card-third-dark-text);
+        margin-top: 0.25rem;
+    }
+    &-remain {
+        background: var(--btn-bkg-sec);
+        color: var(--btn-text-sec);
+        padding: 0.25rem 1rem 0.5rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 5rem;
     }
     .icon {
         cursor: pointer;

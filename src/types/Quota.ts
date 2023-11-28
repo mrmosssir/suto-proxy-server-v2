@@ -5,4 +5,9 @@ export type QuotaMap = {
     proxys: QuotaMapItem
 };
 
-export type QuotaMapItem = { name: string, unit?: string };
+export type QuotaMapItem = {
+    name: string,
+    unit?: string,
+    cycle: string,
+    icon?: string
+};

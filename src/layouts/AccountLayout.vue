@@ -20,7 +20,7 @@ import { RouterView, RouterLink } from "vue-router";
 <style lang="scss">
     .account-layout {
         min-height: 100vh;
-        background: $gray;
+        background: rgba(0, 0, 0, 0.1);
         .container {
             max-width: 450px;
             text-align: center;
@@ -32,7 +32,7 @@ import { RouterView, RouterLink } from "vue-router";
         }
         .title {
             font-size: 48px;
-            color: $primary;
+            color: #DA7274;
             margin-bottom: 32px;
             span {
                 color: #333333;

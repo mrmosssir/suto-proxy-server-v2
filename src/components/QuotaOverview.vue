@@ -1,30 +1,28 @@
 <template>
-    <div class="quota-overview">
-        <ul class="quota-overview-list">
-            <li class="quota-overview-item" v-for="item in quotaKeyList">
-                <div class="quota-overview-icon">
-                    <icon :icon="`fa-solid ${nameMapping[item as keyof QuotaMap]?.icon}`"></icon>
+    <ul class="quota-overview">
+        <li class="quota-overview-item" v-for="item in quotaKeyList">
+            <div class="quota-overview-icon">
+                <icon :icon="`fa-solid ${nameMapping[item as keyof QuotaMap]?.icon}`"></icon>
+            </div>
+            <strong class="quota-overview-title">{{ nameMapping[item as keyof QuotaMap]?.name }}</strong>
+            <p class="quota-overview-content">
+                {{ quota[item as keyof Quota] }}
+                <span class="quota-overview-unit" v-if="nameMapping[item as keyof QuotaMap]?.unit">
+                    {{ nameMapping[item as keyof QuotaMap]?.unit }}
+                </span>
+                / {{ nameMapping[item as keyof QuotaMap]?.cycle }}
+            </p>
+            <Progress :percent="50"></Progress>
+            <div class="quota-overview-bottom">
+                <div class="quota-overview-rate">
+                    0 / {{ quota[item as keyof Quota] }}
                 </div>
-                <strong class="quota-overview-title">{{ nameMapping[item as keyof QuotaMap]?.name }}</strong>
-                <p class="quota-overview-content">
-                    {{ quota[item as keyof Quota] }}
-                    <span class="quota-overview-unit" v-if="nameMapping[item as keyof QuotaMap]?.unit">
-                        {{ nameMapping[item as keyof QuotaMap]?.unit }}
-                    </span>
-                    / {{ nameMapping[item as keyof QuotaMap]?.cycle }}
-                </p>
-                <Progress :percent="50"></Progress>
-                <div class="quota-overview-bottom">
-                    <div class="quota-overview-rate">
-                        0 / {{ quota[item as keyof Quota] }}
-                    </div>
-                    <div class="quota-overview-remain">
-                        0 Remaing
-                    </div>
+                <div class="quota-overview-remain">
+                    0 Remaing
                 </div>
-            </li>
-        </ul>
-    </div>
+            </div>
+        </li>
+    </ul>
 </template>
 
 <script setup lang="ts">
@@ -58,13 +56,11 @@ if (!quota.value.level) getQuota(user.value.uid);
 
 <style lang="scss" scoped>
 .quota-overview {
+    width: 100%;
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
     margin: 4rem 0 2rem 0;
-    &-list {
-        width: 100%;
-        display: flex;
-        gap: 3rem;
-        flex-wrap: wrap;
-    }
     &-item {
         width: 16.25rem;
         background: var(--card-sec-bkg);

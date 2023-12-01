@@ -36,7 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 0.5px solid rgba(0, 0, 0, 0.12);
         padding: 24px 48px;
         .title {
             display: flex;
@@ -46,16 +45,16 @@ const props = withDefaults(defineProps<Props>(), {
                 margin-right: 16px;
             }
             h2 {
-                font-size: 18px;
+                font-size: 20px;
                 font-weight: 500;
-                color: rgba(0, 0, 0, 0.6);
+                color: var(--main-text);
             }
         }
         .quota {
-            background: rgba(0, 0, 0, 0.12);
-            color: rgba(0, 0, 0, 0.6);
+            background: var(--btn-bkg-sec);
+            color: var(--btn-text-sec);
             font-size: 14px;
-            border-radius: 4px;
+            border-radius: 50px;
             padding: 8px 24px;
             transition: all 0.3s;
             cursor: default;

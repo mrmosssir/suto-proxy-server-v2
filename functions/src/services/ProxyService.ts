@@ -3,6 +3,7 @@ import { https } from "firebase-functions";
 
 import { ResponseBase, ProxyListResponse, ProxyServiceResponse } from "../models/Response";
 import { store } from "../utils/store";
+import { getToday } from "../utils/date";
 
 import { userRouteIsExists, permissionDenied } from "./UserService";
 
@@ -10,23 +11,65 @@ type Req = https.Request;
 
 type ProxyListHandler = (uid: string) => ResponseBase | ProxyListResponse | Promise<ResponseBase> | Promise<ProxyListResponse>;
 
+type ProxyDetailHandler = (name: string, uid: string) => ResponseBase  | Promise<ResponseBase>;
+
 type ProxyServiceHandler = (request: Req) => ResponseBase | ProxyServiceResponse | Promise<ResponseBase> | Promise<ProxyServiceResponse>;
 
 export const getProxyListService: ProxyListHandler = async (uid: string) => {
+
     const response = new ProxyListResponse(0, "Success");
     if (!uid) return permissionDenied();
 
-    const userProxySnapshot = await store.collection("user-proxy").doc(uid).get();
-    if (!userProxySnapshot.exists) {
-        response.data = [];
-        return response;
-    }
-    const userProxyData = await userProxySnapshot.data();
-    const list = userProxyData ? userProxyData.list : [];
-    response.data = list;
+    response.data = [];
+    const userProxySnapshot = await store.collection("user-proxy");
+    const userProxySnapshotQuery = await userProxySnapshot.where("owner", "==", uid).get();
+
+    userProxySnapshotQuery.forEach(doc => {
+        const data = doc.data();
+        if (data) response.data.push({ id: doc.id, name: data.name, created: data.created });
+    });
 
     return response;
 };
+
+export const addProxyService: ProxyDetailHandler = async (name: string, uid: string) => {
+    try {
+
+        if (!uid) return permissionDenied();
+        
+        const userProxySnapshot = await store.collection("user-proxy");
+        const userProxySnapshotQuery = await userProxySnapshot.where("owner", "==", uid).where("name", "==", name).get();
+
+        if (!userProxySnapshotQuery.empty) {
+            return new ResponseBase(409, "Proxy name already exists.");
+        }
+
+        await store.collection("user-proxy").doc().set({ name: name, owner: uid, created: getToday() });
+
+        return new ResponseBase(0, "Success");
+
+    } catch (error) {
+        console.log(error);
+        const errroResponse = new ResponseBase(500, "");
+        const message: string = error instanceof Error ? error.message : "Unknown error.";
+        errroResponse.setMessage(message);
+        return errroResponse;
+    }
+}
+
+export const deleteProxyService: ProxyDetailHandler = async (uid: string, pid: string) => {
+    try {
+        if (!uid || !pid) return permissionDenied();
+        await store.collection("user-proxy").doc(pid).delete();
+        return new ResponseBase(0, "Success");
+    } catch (error) {
+        console.log(error);
+        const errroResponse = new ResponseBase(500, "");
+        const message: string = error instanceof Error ? error.message : "Unknown error.";
+        errroResponse.setMessage(message);
+        return errroResponse;
+    }
+}
 
 export const getService: ProxyServiceHandler = async (request: Req) => {
     try {

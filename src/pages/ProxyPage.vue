@@ -1,5 +1,5 @@
 <template>
-    <div class="proxy-page">
+    <div class="wrap">
         <Header title="Proxy" icon="fa-server" :quota="{ name: 'Proxy', value: quota.proxys }"></Header>
         <div class="container">
             <h2 class="category">PERONAL ({{ proxyList.length }})</h2>
@@ -31,36 +31,41 @@ if (!proxyList.value.length) getProxyList(user.value.uid);
 
 </script>
 
-<style lang="scss" scoped>
-.proxy-page {
+<style lang="scss">
+.wrap {
     width: 100%;
     .container {
         max-width: 1200px;
         width: 100%;
-        padding: 0 48px 24px 48px;
+        padding: 24px 48px;
         margin: 0 auto;
     }
     .category {
+        display: inline;
         margin-top: 24px;
         font-size: 16px;
         font-weight: 500;
-        color: rgba(0, 0, 0, 0.5);
+        background: var(--card-main-bkg);
+        color: var(--card-main-text);
+        padding: 8px 24px;
+        border-radius: 100px;
     }
     .proxy-item {
         margin-top: 24px;
         padding: 24px;
-        border: 0.5px solid rgba(0, 0, 0, 0.12);
-        border-radius: 4px;
+        background: var(--card-sec-bkg);
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+        border-radius: 16px;
         .name {
             font-size: 20px;
             font-weight: 500;
-            color: #7163ba;
+            color: var(--card-sec-text);
             cursor: pointer;
         }
         .time {
             font-size: 16px;
             margin-top: 8px;
-            color: rgba(0, 0, 0, 0.5);
+            color: var(--card-third-dark-text);
             span {
                 font-size: 14px;
             }

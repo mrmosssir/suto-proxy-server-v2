@@ -4,7 +4,7 @@ import { https, Response } from "firebase-functions";
 /* eslint-disable */
 const cors = require("cors")({ origin: true });
 
-import { getProxyListService, getService } from "../services/ProxyService";
+import { getProxyListService, addProxyService, deleteProxyService, getService } from "../services/ProxyService";
 import { ResponseBase, ProxyServiceResponse } from "../models/Response";
 
 import { hasToken } from "../middleware/account";
@@ -26,6 +26,31 @@ export const proxyListController: RequestHandler = async (request: Req, response
             response.send(errroResponse);
         }
     });
+}
+
+export const proxyDetailController: RequestHandler = async (request: Req, response: Res) => {
+    await cors(request, response, async () => {
+        try {
+            const form = request.body;
+            switch (request.method.toUpperCase()) {
+                case "POST":
+                    const proxyResponse: ResponseBase = await addProxyService(form.name, form.uid);
+                    response.send(proxyResponse);
+                    break;
+                case "DELETE":
+                    const proxyDeleteResponse: ResponseBase = await deleteProxyService(form.uid, form.pid);
+                    response.send(proxyDeleteResponse);
+                    break;
+                default:
+                    response.send({ code: 405, message: "Method not support." });
+            }
+        } catch (error) {
+            const errroResponse = new ResponseBase(500, "");
+            const message: string = error instanceof Error ? error.message : "Unknown error";
+            errroResponse.setMessage(message);
+            response.send(errroResponse);
+        }
+    }); 
 }
 
 export const proxyController: RequestHandler = async (request: Req, response: Res) => {

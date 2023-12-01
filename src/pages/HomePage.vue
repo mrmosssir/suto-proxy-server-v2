@@ -33,7 +33,7 @@
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .wrap {
     .title {
         font-size: 0.75rem;

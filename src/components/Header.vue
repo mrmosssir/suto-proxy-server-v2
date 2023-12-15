@@ -5,7 +5,7 @@
             <h2>{{ props.title }}</h2>
         </div>
         <div class="quota">
-            {{ `${props.quota.name} : 0 / ${props.quota.value}` }}
+            {{ `${props.quota.name} : ${props.quota.current} / ${props.quota.max}` }}
         </div>
     </div>
 </template>
@@ -17,14 +17,15 @@ interface Props {
     title: string,
     quota: {
         name: string,
-        value?: number
+        max?: number,
+        current?: number
     },
     icon: string
 };
 
 const props = withDefaults(defineProps<Props>(), {
     title: "",
-    quota: () => ({ name: "", value: 0 }),
+    quota: () => ({ name: "", max: 0, current: 0 }),
     icon: "",
 });
 
@@ -51,16 +52,13 @@ const props = withDefaults(defineProps<Props>(), {
             }
         }
         .quota {
-            background: var(--btn-bkg-sec);
-            color: var(--btn-text-sec);
+            background: var(--badge-bkg-main);
+            color: var(--badge-text-main);
             font-size: 14px;
             border-radius: 50px;
             padding: 8px 24px;
             transition: all 0.3s;
             cursor: default;
-            &:hover {
-                background: rgba(0, 0, 0, 0.14)
-            }
         }
     }
 </style>

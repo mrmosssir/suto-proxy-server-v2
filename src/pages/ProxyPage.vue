@@ -1,8 +1,12 @@
 <template>
     <div class="wrap">
-        <Header title="Proxy" icon="fa-server" :quota="{ name: 'Proxy', value: quota.proxys }"></Header>
+        <Header title="Proxy" icon="fa-server" :quota="{ name: 'Proxy', max: quota.proxys, current: proxyList.length }"></Header>
         <div class="container">
-            <h2 class="category">PERONAL ({{ proxyList.length }})</h2>
+            <div class="top">
+                <h2 class="category">Personal ({{ proxyList.length }})</h2>
+                <button class="add-btn" v-if="proxyList.length < quota.proxys">Add Proxy</button>
+            </div>
+            
             <div v-for="item in (proxyList as Array<ProxyItem>)" class="proxy-item">
                 <h3 class="name">{{ item.name }}</h3>
                 <p class="time">created on <span>{{ item.created }}</span></p>
@@ -40,18 +44,29 @@ if (!proxyList.value.length) getProxyList(user.value.uid);
         padding: 24px 48px;
         margin: 0 auto;
     }
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
     .category {
-        display: inline;
-        margin-top: 24px;
         font-size: 16px;
         font-weight: 500;
-        background: var(--card-main-bkg);
-        color: var(--card-main-text);
-        padding: 8px 24px;
+        color: var(--card-sec-text);
         border-radius: 100px;
     }
+    .add-btn {
+        font-size: 14px;
+        border-radius: 24px;
+        border: none;
+        background: var(--btn-bkg-main);
+        color: var(--btn-text-main);
+        padding: 8px 16px;
+        cursor: pointer;
+    }
     .proxy-item {
-        margin-top: 24px;
+        margin-bottom: 16px;
         padding: 24px;
         background: var(--card-sec-bkg);
         box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;

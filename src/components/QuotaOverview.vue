@@ -102,8 +102,8 @@ if (!quota.value.level) getQuota(user.value.uid);
         color: var(--card-third-dark-text);
     }
     &-remain {
-        background: var(--btn-bkg-sec);
-        color: var(--btn-text-sec);
+        background: var(--badge-bkg-main);
+        color: var(--badge-text-main);
         padding: 0.25rem 1rem 0.5rem 1rem;
         font-size: 0.9rem;
         font-weight: 500;
